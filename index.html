@@ -1,655 +1,835 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Світова велич Тараса Шевченка</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #07060A;
-            --gold: #C9A84C;
-            --gold-light: #E8C97A;
-            --gold-dim: rgba(201,168,76,0.15);
-            --text: #F0EDE8;
-            --text-muted: #8A8070;
-            --red: #8B2020;
-            --blue-ua: #1A4A8C;
-            --t: 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Огірок Фенікс — Щоденник вирощування</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #112a05;
+    --green-mid: #2c5e1a;
+    --green-light: #529b33;
+    --green-accent: #8bc34a;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --text-main: #1e3209;
+    --text-muted: #4a6030;
+  }
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body, html {
-            width: 100%; height: 100%;
-            font-family: 'Jost', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    /* Анімований "живий" зелений фон */
+    background: linear-gradient(120deg, #1b3a0b, #4a7c2f, #1b4d13, #679c3e);
+    background-size: 300% 300%;
+    animation: bgShift 20s ease infinite;
+  }
 
-        /* Фонові частинки */
-        .particles {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
+  @keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-        .particle {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            background: var(--gold);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float linear infinite;
-        }
+  /* Патерн листочків на фоні */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 2px, transparent 2px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-        @keyframes float {
-            0% { opacity: 0; transform: translateY(100vh) scale(0); }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.2; }
-            100% { opacity: 0; transform: translateY(-20px) scale(1); }
-        }
+  /* Контейнер слайдів */
+  .slides-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
 
-        /* Рамки куточки */
-        .corner-frame {
-            position: fixed;
-            inset: 24px;
-            pointer-events: none;
-            z-index: 50;
-        }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s;
+    z-index: 1;
+    overflow-y: auto;
+  }
 
-        .corner-frame::before, .corner-frame::after,
-        .corner-frame > span::before, .corner-frame > span::after {
-            content: '';
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            border-color: rgba(201,168,76,0.35);
-            border-style: solid;
-        }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
 
-        .corner-frame::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
-        .corner-frame::after { top: 0; right: 0; border-width: 1px 1px 0 0; }
-        .corner-frame > span::before { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
-        .corner-frame > span::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+  /* Скляна картка презентації (Glassmorphism) */
+  .slide-inner {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), inset 0 0 0 2px rgba(255,255,255,0.5);
+    max-width: 1100px;
+    width: 100%;
+    max-height: 85vh;
+    padding: 50px 60px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 
-        /* Слайдер */
-        .slider {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-        }
+  /* Скроллбар для картки */
+  .slide-inner::-webkit-scrollbar { width: 6px; }
+  .slide-inner::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 10px; }
 
-        .slide {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity var(--t);
-            z-index: 1;
-        }
+  /* Двоколонковий макет (Текст зліва, Фото справа) */
+  .split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
 
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-            z-index: 10;
-        }
+  /* Анімації появи контенту */
+  .slide.active .slide-text-content {
+    animation: slideInLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .slide.active .slide-media-content {
+    animation: slideInRight 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
 
-        /* Розділений макет */
-        .split-layout {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
 
-        .split-layout.reverse { flex-direction: row-reverse; }
+  /* Типографіка */
+  .slide-num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--green-light);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: block;
+  }
 
-        .text-col {
-            flex: 1.1;
-            padding: 5rem 6rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            z-index: 2;
-        }
+  .slide-title-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 400;
+    color: var(--green-dark);
+    line-height: 1.05;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-        .img-col {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
+  .slide-title-main em {
+    font-style: italic;
+    color: var(--green-light);
+  }
 
-        .slide-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(40%) sepia(20%) contrast(1.05) brightness(0.75);
-            transform: scale(1.05);
-            transition: transform 8s ease;
-        }
+  .slide-subtitle {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
 
-        .slide.active .slide-img { transform: scale(1); }
+  .slide-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 46px);
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 24px;
+    line-height: 1.2;
+    position: relative;
+  }
 
-        /* Градієнти на зображеннях */
-        .img-col::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
-            z-index: 1;
-            pointer-events: none;
-        }
+  .slide-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-main);
+    font-weight: 400;
+  }
 
-        .img-col::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, var(--bg) 0%, transparent 40%);
-            z-index: 2;
-            pointer-events: none;
-        }
+  .slide-text p {
+    margin-bottom: 18px;
+  }
 
-        .split-layout.reverse .img-col::after {
-            background: linear-gradient(to left, var(--bg) 0%, transparent 40%);
-        }
+  /* Дизайн "Полароїд" для фото (зберігає пропорції) */
+  .slide-media-content {
+    display: flex;
+    justify-content: center;
+  }
 
-        /* Тонка золота лінія між колонками */
-        .divider-line {
-            position: absolute;
-            top: 10%;
-            bottom: 10%;
-            width: 1px;
-            background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
-            z-index: 3;
-        }
+  .photo-block {
+    background: #ffffff;
+    padding: 12px 12px 45px 12px;
+    border-radius: 4px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transform: rotate(2deg);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    position: relative;
+    max-width: 100%;
+  }
 
-        .split-layout .divider-line { right: 0; }
-        .split-layout.reverse .divider-line { left: 0; }
+  .photo-block:nth-child(even) {
+    transform: rotate(-2deg);
+  }
 
-        /* Центрований макет */
-        .center-layout {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
+  .photo-block:hover {
+    transform: scale(1.04) rotate(0deg);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.25);
+    z-index: 10;
+  }
 
-        .center-layout .bg-image {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(50%) sepia(20%) brightness(0.5);
-            transform: scale(1.05);
-            transition: transform 8s ease;
-        }
+  .photo-block img {
+    width: 100%;
+    height: auto; /* Зберігає природні розміри та пропорції! */
+    max-height: 50vh; /* Щоб не вилазило за екран */
+    object-fit: contain;
+    border-radius: 2px;
+    display: block;
+    border: 1px solid #f0f0f0;
+  }
 
-        .slide.active .center-layout .bg-image,
-        .slide.active.center-layout .bg-image-inner {
-            transform: scale(1);
-        }
+  .photo-caption {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 600;
+  }
 
-        .center-layout::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, rgba(7,6,10,0.3) 0%, rgba(7,6,10,0.92) 100%);
-            z-index: 1;
-        }
+  /* Стопка фотографій (для слайду з кількома фото) */
+  .photo-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-        .center-content {
-            position: relative;
-            z-index: 2;
-            max-width: 860px;
-            width: 100%;
-        }
+  .photo-stack .photo-block:nth-child(1) {
+    transform: rotate(-3deg) translateX(-15px);
+    z-index: 1;
+  }
 
-        /* Декор: номер слайду */
-        .slide-number {
-            position: absolute;
-            right: 2.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 9rem;
-            font-weight: 300;
-            color: rgba(201,168,76,0.06);
-            line-height: 1;
-            pointer-events: none;
-            z-index: 0;
-            user-select: none;
-        }
+  .photo-stack .photo-block:nth-child(2) {
+    margin-top: -80px; /* Накладання фото */
+    transform: rotate(4deg) translateX(15px);
+    z-index: 2;
+  }
 
-        /* Типографіка */
-        h1, h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 400;
-            line-height: 1.1;
-        }
+  .photo-stack .photo-block:hover {
+    z-index: 10;
+  }
 
-        .eyebrow {
-            font-family: 'Jost', sans-serif;
-            font-size: clamp(0.65rem, 1vw, 0.8rem);
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            font-weight: 400;
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
+  /* Бейдж дати */
+  .date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(139, 195, 74, 0.2);
+    color: var(--green-mid);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 30px;
+    margin-bottom: 16px;
+  }
 
-        .eyebrow::before {
-            content: '';
-            display: block;
-            width: 30px;
-            height: 1px;
-            background: var(--gold);
-            flex-shrink: 0;
-        }
+  /* Блок статистики */
+  .stat-block {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+  }
 
-        .center-content .eyebrow {
-            justify-content: center;
-        }
+  .stat-item {
+    flex: 1;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--green-accent);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(139,195,74,0.1);
+  }
 
-        .center-content .eyebrow::before { display: none; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--green-mid);
+    display: block;
+    line-height: 1;
+  }
 
-        h1 {
-            font-size: clamp(3rem, 6.5vw, 5.5rem);
-            margin-bottom: 1.8rem;
-            color: #fff;
-            font-weight: 300;
-        }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
 
-        h2 {
-            font-size: clamp(2.2rem, 4.5vw, 4rem);
-            margin-bottom: 1.6rem;
-            color: #fff;
-            font-weight: 300;
-        }
+  /* Декоративний листочок */
+  .leaf-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 20px;
+    display: block;
+    color: var(--green-light);
+  }
 
-        p {
-            font-size: clamp(0.9rem, 1.1vw, 1.05rem);
-            line-height: 1.75;
-            color: var(--text-muted);
-            margin-bottom: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 0.01em;
-            max-width: 520px;
-        }
+  /* Навігація внизу */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    z-index: 100;
+  }
 
-        .center-content p {
-            max-width: 720px;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-        }
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(5px);
+    border: none;
+    color: var(--green-dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
 
-        .highlight {
-            color: var(--gold-light);
-            font-weight: 400;
-        }
+  .nav-btn:hover {
+    background: var(--green-accent);
+    color: white;
+    transform: translateY(-2px);
+  }
 
-        /* Велика цитата */
-        .big-quote {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            font-weight: 300;
-            color: var(--gold-light);
-            line-height: 1.25;
-            margin-bottom: 2rem;
-        }
+  .nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 
-        /* Декоративна горизонтальна лінія */
-        .h-rule {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(to right, var(--gold), transparent);
-            margin-bottom: 1.5rem;
-        }
+  .nav-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 
-        /* Анімації входу */
-        .anim {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.9s ease, transform 0.9s ease;
-        }
+  /* Крапки прогресу */
+  .nav-dots {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
 
-        .slide.active .anim:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: none; }
-        .slide.active .anim:nth-child(2) { transition-delay: 0.25s; opacity: 1; transform: none; }
-        .slide.active .anim:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: none; }
-        .slide.active .anim:nth-child(4) { transition-delay: 0.55s; opacity: 1; transform: none; }
-        .slide.active .anim:nth-child(5) { transition-delay: 0.7s; opacity: 1; transform: none; }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
 
-        /* Навігація */
-        .nav {
-            position: fixed;
-            bottom: 2.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 0;
-            z-index: 100;
-        }
+  .dot.active {
+    background: var(--green-accent);
+    width: 24px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--green-accent);
+  }
 
-        .nav-btn {
-            background: rgba(7,6,10,0.8);
-            border: 1px solid rgba(201,168,76,0.2);
-            color: var(--gold-light);
-            font-size: 1rem;
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(12px);
-            position: relative;
-        }
-
-        .nav-btn:first-child {
-            border-radius: 4px 0 0 4px;
-            border-right: none;
-        }
-
-        .nav-btn:last-child {
-            border-radius: 0 4px 4px 0;
-            border-left: none;
-        }
-
-        .nav-btn:hover:not(:disabled) {
-            background: rgba(201,168,76,0.1);
-            border-color: rgba(201,168,76,0.5);
-        }
-
-        .nav-btn:disabled { opacity: 0.25; cursor: default; }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0 1.5rem;
-            height: 48px;
-            background: rgba(7,6,10,0.8);
-            border: 1px solid rgba(201,168,76,0.2);
-            backdrop-filter: blur(12px);
-        }
-
-        .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: rgba(201,168,76,0.25);
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            background: var(--gold);
-            box-shadow: 0 0 8px rgba(201,168,76,0.6);
-            transform: scale(1.3);
-        }
-
-        /* Прогрес лінія */
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--gold), var(--gold-light));
-            z-index: 200;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Номер слайду (верхній лівий) */
-        .slide-counter {
-            position: fixed;
-            top: 2rem;
-            left: 2.5rem;
-            z-index: 100;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.85rem;
-            color: rgba(201,168,76,0.5);
-            letter-spacing: 2px;
-        }
-
-        /* Адаптив */
-        @media (max-width: 900px) {
-            .split-layout, .split-layout.reverse { flex-direction: column; }
-
-            .img-col {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 0;
-            }
-
-            .img-col::after, .split-layout.reverse .img-col::after {
-                background: linear-gradient(to top, var(--bg) 30%, rgba(7,6,10,0.8) 100%);
-            }
-
-            .divider-line { display: none; }
-
-            .text-col {
-                position: relative;
-                z-index: 2;
-                padding: 2rem 1.8rem 7rem 1.8rem;
-                justify-content: flex-end;
-                background: transparent;
-            }
-
-            p { max-width: 100%; }
-            .slide-number { display: none; }
-
-            .center-layout { padding: 2rem 1.8rem 7rem 1.8rem; justify-content: center; }
-            .big-quote { font-size: clamp(1.6rem, 6vw, 2.5rem) !important; }
-
-            .corner-frame { inset: 12px; }
-            .slide-counter { top: 1.2rem; left: 1.5rem; }
-        }
-    </style>
+  /* Адаптив під телефон */
+  @media (max-width: 900px) {
+    .split-layout {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .slide-inner {
+      padding: 30px 20px;
+      max-height: 80vh;
+    }
+    .slide-title-main { font-size: 42px; }
+    .nav { padding: 15px 20px; }
+    .nav-btn { padding: 10px 16px; font-size: 13px; }
+    .photo-stack .photo-block:nth-child(2) { margin-top: -30px; }
+    .stat-block { flex-wrap: wrap; }
+    .stat-item { min-width: 100px; }
+  }
+</style>
 </head>
 <body>
 
-<!-- Частинки -->
-<div class="particles" id="particles"></div>
+<div class="slides-wrapper" id="slider">
 
-<!-- Куточки рамки -->
-<div class="corner-frame"><span></span></div>
-
-<!-- Лічильник -->
-<div class="slide-counter" id="slideCounter">01 / 06</div>
-
-<!-- Прогрес -->
-<div class="progress-bar" id="progress"></div>
-
-<div class="slider">
-
-    <!-- СЛАЙД 1: Титульний -->
-    <div class="slide active center-layout">
-        <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2000'); position:absolute; inset:0; background-size:cover; background-position:center; filter:grayscale(50%) sepia(20%) brightness(0.5); transform:scale(1.05); transition:transform 8s ease;"></div>
-        <div class="center-content">
-            <div class="eyebrow anim">Феномен українського генія</div>
-            <h1 class="anim">Світова велич<br>Тараса Шевченка</h1>
-            <div class="h-rule anim" style="margin: 0 auto 1.5rem;"></div>
-            <p class="anim">Поет, що вийшов за межі однієї нації та став символом боротьби за свободу для всього людства.</p>
-        </div>
+  <!-- Слайд 1: Головний (Титулка) -->
+  <div class="slide active" id="slide-0">
+    <div class="slide-inner" style="max-width: 700px; text-align: center;">
+      <svg class="leaf-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
+      </svg>
+      <span class="slide-num">Проєкт з Біології · 2026</span>
+      <h1 class="slide-title-main">Огірок<br><em>Фенікс</em></h1>
+      <p class="slide-subtitle">Щоденник вирощування — від насіння до врожаю</p>
     </div>
+  </div>
 
-    <!-- СЛАЙД 2 -->
-    <div class="slide split-layout">
-        <div class="slide-number">02</div>
-        <div class="text-col">
-            <div class="eyebrow anim">Світовий рекорд</div>
-            <h2 class="anim">Пам'ять у бронзі та камені</h2>
-            <div class="h-rule anim"></div>
-            <p class="anim">Тарас Шевченко має найбільшу кількість пам'ятників у світі серед культурних діячів, поступаючись лише релігійним постатям.</p>
-            <p class="anim">Встановлено <span class="highlight">понад 1380 монументів</span>, з яких понад 120 знаходяться у 44 країнах світу: у Вашингтоні, Парижі, Пекіні, Буенос-Айресі та навіть в Австралії.</p>
+  <!-- Слайд 2: Про сорт (Додано Фото 5) -->
+  <div class="slide" id="slide-1">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">01 · Про сорт</span>
+          <h2 class="slide-heading">Що за сорт "Фенікс"?</h2>
+          <div class="slide-text">
+            <p><strong>Огірок Фенікс</strong> — це популярний середньопізній сорт, який найкраще підходить для вирощування у відкритому ґрунті. Він починає плодоносити приблизно через 50–60 днів після сходів. Рослина сильноросла, утворює довгі батоги та чудово переносить спекотну погоду.</p>
+            <p>Плоди мають темно-зелений колір, видовжену форму і невеликі горбики. Зазвичай вони досягають довжини 10–15 см. М'якоть хрумка, соковита і без гіркоти.</p>
+            <p>Цей сорт цінується за надзвичайну стійкість до хвороб (особливо борошнистої роси) та за довгий період плодоношення — аж до самої осені.</p>
+          </div>
         </div>
-        <div class="img-col">
-            <div class="divider-line"></div>
-            <img src="https://oktv.ua/img/article_photo/01ts.jpg" alt="Монумент" class="slide-img">
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo5.jpg" alt="Масові сходи (Фото 5)">
+            <div class="photo-caption">Фото 5: Сходи сорту Фенікс</div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- СЛАЙД 3 -->
-    <div class="slide split-layout reverse">
-        <div class="slide-number" style="left:2.5rem; right:auto;">03</div>
-        <div class="text-col">
-            <div class="eyebrow anim">Глобальне слово</div>
-            <h2 class="anim">Мовою всього світу</h2>
-            <div class="h-rule anim"></div>
-            <p class="anim">Твори Великого Кобзаря подолали мовні бар'єри і сьогодні перекладені <span class="highlight">більш ніж 150 мовами</span>, включаючи японську, корейську та есперанто.</p>
-            <p class="anim">Його легендарний «Заповіт» увійшов до списку найбільш перекладуваних віршів в історії людства, ставши гімном волелюбності на всіх континентах.</p>
+  <!-- Слайд 3: Посів -->
+  <div class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">02 · Посів</span>
+          <h2 class="slide-heading">Статистика посіву</h2>
+          <div class="slide-text">
+            <p>Я провела експеримент з посадкою. Було висаджено 18 насінин огірків. З них успішно проросло рівно 9 штук.</p>
+          </div>
+          <div class="stat-block">
+            <div class="stat-item">
+              <span class="stat-num">18</span>
+              <span class="stat-label">посаджено</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">9</span>
+              <span class="stat-label">зійшло</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">50%</span>
+              <span class="stat-label">схожість</span>
+            </div>
+          </div>
         </div>
-        <div class="img-col">
-            <div class="divider-line"></div>
-            <img src="https://s1.livelib.ru/boocover/1000520366/200x305/4e4c/boocover.jpg" alt="Книги" class="slide-img">
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo1.jpg" alt="Фото 1">
+            <div class="photo-caption">Фото 1</div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- СЛАЙД 4 -->
-    <div class="slide split-layout">
-        <div class="slide-number">04</div>
-        <div class="text-col">
-            <div class="eyebrow anim">Масштаб Всесвіту</div>
-            <h2 class="anim">Від Землі до зірок</h2>
-            <div class="h-rule anim"></div>
-            <p class="anim">Ім'я Шевченка назавжди вписане не лише на світовій карті, але й у космосі.</p>
-            <p class="anim">На його честь названо кратер на планеті Меркурій та <span class="highlight">астероїд 2427 Кобзар</span>, відкритий у 1976 році. А на нашій планеті його ім'я носить неприступний пік на Кавказі висотою 4200 метрів.</p>
+  <!-- Слайд 4: Дата посіву -->
+  <div class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">03 · Старт</span>
+          <span class="date-badge">26 березня, вівторок, 2026</span>
+          <h2 class="slide-heading">День посадки насіння</h2>
+          <div class="slide-text">
+            <p>Це був початок мого проєкту. Насіння було дбайливо посаджене в підготовлений ґрунт 26 березня 2026 року, у вівторок.</p>
+          </div>
         </div>
-        <div class="img-col">
-            <div class="divider-line"></div>
-            <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1200" alt="Космос" class="slide-img">
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo2.jpg" alt="Фото 2">
+            <div class="photo-caption">Фото 2</div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- СЛАЙД 5 -->
-    <div class="slide split-layout reverse">
-        <div class="slide-number" style="left:2.5rem; right:auto;">05</div>
-        <div class="text-col">
-            <div class="eyebrow anim">Міжнародний авторитет</div>
-            <h2 class="anim">Голос демократії</h2>
-            <div class="h-rule anim"></div>
-            <p class="anim">Ідеї Шевченка надихали видатних світових лідерів. Під час відкриття монумента у Вашингтоні, президент США Дуайт Ейзенхауер назвав поета <span class="highlight">«героєм світового масштабу»</span>.</p>
-            <p class="anim">Для міжнародної спільноти він є вічним символом безкомпромісної боротьби за права людини, свободу та національну гідність.</p>
+  <!-- Слайд 5: Посадка цибулі -->
+  <div class="slide" id="slide-4">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">04 · Сусіди по грядці</span>
+          <span class="date-badge">3 квітня, п'ятниця, 2026</span>
+          <h2 class="slide-heading">Посадка цибулі</h2>
+          <div class="slide-text">
+            <p>Щоб оптимізувати простір, я вирішила вирощувати поруч зелену цибулю. Її я посадила 3 квітня.</p>
+          </div>
         </div>
-        <div class="img-col">
-            <div class="divider-line"></div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Taras_Shevchenko_-_portrait_by_Ivan_Kramskoi.jpg" alt="Шевченко" class="slide-img" style="object-position: top;">
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo3.jpg" alt="Фото 3">
+            <div class="photo-caption">Фото 3</div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- СЛАЙД 6: Фінал -->
-    <div class="slide center-layout">
-        <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1472289065668-ce650ac443d2?q=80&w=2000'); position:absolute; inset:0; background-size:cover; background-position:center; filter:grayscale(50%) sepia(20%) brightness(0.45); transform:scale(1.05); transition:transform 8s ease;"></div>
-        <div class="center-content">
-            <div class="eyebrow anim" style="justify-content:center;">Заповіт</div>
-            <div class="big-quote anim">«І мене в сім'ї великій,<br>в сім'ї вольній, новій...»</div>
-            <div class="h-rule anim" style="margin: 0 auto 1.8rem; background: linear-gradient(to right, transparent, var(--gold), transparent); width:80px;"></div>
-            <p class="anim">Сьогодні його слово лунає як ніколи актуально, нагадуючи світу про незламність українського духу та цінність незалежності.</p>
+  <!-- Слайд 6: Перші сходи -->
+  <div class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">05 · Життя пробивається</span>
+          <span class="date-badge">31 березня, вівторок, 2026</span>
+          <h2 class="slide-heading">Перші сходи</h2>
+          <div class="slide-text">
+            <p>Лише через 5 днів після посадки, 31 березня, з'явилися перші маленькі паростки огірків. Це був дуже радісний момент!</p>
+          </div>
         </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo4.jpg" alt="Фото 4">
+            <div class="photo-caption">Фото 4</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-</div>
+  <!-- Слайд 7: Масові сходи (Без фото 5) -->
+  <div class="slide" id="slide-6">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">06 · Прогрес</span>
+          <span class="date-badge">5 квітня, неділя, 2026</span>
+          <h2 class="slide-heading">Масові сходи</h2>
+          <div class="slide-text">
+            <p>До 5 квітня сходи стали масовими. Рослини виглядали здоровими та сильними.</p>
+            <p>Тим часом цибуля, посаджена раніше, вже почала давати свій перший зелений врожай.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo6.jpg" alt="Фото 6">
+            <div class="photo-caption">Фото 6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- Навігація -->
+  <!-- Слайд 8: 9 огірків -->
+  <div class="slide" id="slide-7">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">07 · Ріст</span>
+          <span class="date-badge">8 квітня, середа, 2026</span>
+          <h2 class="slide-heading">9 молодих огірків</h2>
+          <div class="slide-text">
+            <p>Тут уже чітко видно 9 огірків. Вони поки що лише з сім'ядольними листками, справжні листки ще не з'явилися. Крім того, я засадила вільне місце цибулею для ущільнення посадки.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo7.jpg" alt="Фото 7">
+            <div class="photo-caption">Фото 7</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 9: Цибуля -->
+  <div class="slide" id="slide-8">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">08 · Огляд цибулі</span>
+          <span class="date-badge">6 квітня, понеділок, 2026</span>
+          <h2 class="slide-heading">Ріст цибулі</h2>
+          <div class="slide-text">
+            <p>А це цибуля станом на понеділок, 6 квітня. Вона росте навіть швидше, ніж я очікувала, утворюючи пишний зелений килим.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo8.jpg" alt="Фото 8">
+            <div class="photo-caption">Фото 8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 10: Підростають (Дві фотографії стопкою) -->
+  <div class="slide" id="slide-9">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">09 · Активний розвиток</span>
+          <span class="date-badge">9 квітня, середа, 2026</span>
+          <h2 class="slide-heading">Все підростає</h2>
+          <div class="slide-text">
+            <p>Огірки помітно підросли, їхні стебла стають міцнішими. Цибуля також продовжує нарощувати зелену масу.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <!-- Стопка полароїдів -->
+          <div class="photo-stack">
+            <div class="photo-block">
+              <img src="photo9.jpg" alt="Фото 9">
+              <div class="photo-caption">Фото 9</div>
+            </div>
+            <div class="photo-block">
+              <img src="photo10.jpg" alt="Фото 10">
+              <div class="photo-caption">Фото 10</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 11: Рясний ріст -->
+  <div class="slide" id="slide-10">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">10 · Густа зелень</span>
+          <span class="date-badge">14 квітня, вівторок, 2026</span>
+          <h2 class="slide-heading">Спільний контейнер</h2>
+          <div class="slide-text">
+            <p>Тут уже дуже багато цибулі, яка створює густу тінь, та гарні, міцні паростки огірків.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo11.jpg" alt="Фото 11">
+            <div class="photo-caption">Фото 11</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 12: Перші справжні листки -->
+  <div class="slide" id="slide-11">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">11 · Новий етап</span>
+          <span class="date-badge">12 квітня, неділя, 2026</span>
+          <h2 class="slide-heading">Справжні листочки</h2>
+          <div class="slide-text">
+            <p>Важливий етап у житті кожної рослини — формування перших справжніх листків. Вони вже мають характерну для огірка форму та текстуру.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo12.jpg" alt="Фото 12">
+            <div class="photo-caption">Фото 12</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 13: Врожай цибулі -->
+  <div class="slide" id="slide-12">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">12 · Перший врожай</span>
+          <span class="date-badge">18 квітня, субота, 2026</span>
+          <h2 class="slide-heading">Збираємо цибулю</h2>
+          <div class="slide-text">
+            <p>Поки огірки ще готуються до цвітіння, я вже зібрала перший повноцінний врожай свіжої домашньої зеленої цибулі.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo13.jpg" alt="Фото 13">
+            <div class="photo-caption">Фото 13</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 14: Великі листки -->
+  <div class="slide" id="slide-13">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">13 · Розвиток</span>
+          <h2 class="slide-heading">Великі листки</h2>
+          <div class="slide-text">
+            <p>Листя огірків стало масивним, широким та насичено-зеленим. Рослина активно набирає силу для майбутнього плодоношення.</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo14.jpg" alt="Фото 14">
+            <div class="photo-caption">Фото 14</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Слайд 15: Результат -->
+  <div class="slide" id="slide-14">
+    <div class="slide-inner">
+      <div class="split-layout">
+        <div class="slide-text-content">
+          <span class="slide-num">14 · Фінал</span>
+          <h2 class="slide-heading">Ось такий результат!</h2>
+          <div class="slide-text">
+            <p>Експеримент з вирощуванням сорту "Фенікс" пройшов успішно. Рослини здорові, міцні і готові радувати хрумкими огірочками. Дякую за увагу до мого проєкту!</p>
+          </div>
+        </div>
+        <div class="slide-media-content">
+          <div class="photo-block">
+            <img src="photo15.jpg" alt="Фото 15">
+            <div class="photo-caption">Фото 15: Фінальний результат</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end slides-wrapper -->
+
+<!-- Нижня навігація -->
 <nav class="nav">
-    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#8592;</button>
-    <div class="nav-center" id="dots"></div>
-    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">&#8594;</button>
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+    Назад
+  </button>
+
+  <div class="nav-dots" id="dotsContainer"></div>
+
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+    Далі
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <path d="M9 18l6-6-6-6"/>
+    </svg>
+  </button>
 </nav>
 
 <script>
-    const slides = document.querySelectorAll('.slide');
-    const progressBar = document.getElementById('progress');
-    const slideCounter = document.getElementById('slideCounter');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const dotsContainer = document.getElementById('dots');
-    const total = slides.length;
-    let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let animating = false;
 
-    // Dots
-    slides.forEach((_, i) => {
-        const dot = document.createElement('div');
-        dot.className = 'dot' + (i === 0 ? ' active' : '');
-        dot.onclick = () => goTo(i);
-        dotsContainer.appendChild(dot);
+  const dotsContainer = document.getElementById('dotsContainer');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsContainer.appendChild(d);
+  });
+
+  function updateNav() {
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
     });
+  }
 
-    // Particles
-    const pCont = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.cssText = `
-            left: ${Math.random() * 100}%;
-            width: ${Math.random() * 2 + 1}px;
-            height: ${Math.random() * 2 + 1}px;
-            animation-duration: ${Math.random() * 15 + 10}s;
-            animation-delay: ${Math.random() * 10}s;
-        `;
-        pCont.appendChild(p);
-    }
+  function goTo(index) {
+    if (animating || index === current || index < 0 || index >= total) return;
+    animating = true;
+    
+    const prev = slides[current];
+    const next = slides[index];
 
-    function updateUI() {
-        const dots = document.querySelectorAll('.dot');
-        slides.forEach((s, i) => {
-            s.classList.toggle('active', i === current);
-        });
-        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    prev.classList.remove('active');
+    
+    setTimeout(() => {
+      current = index;
+      next.classList.add('active');
+      
+      // Скролимо контент всередині нової картки до верху, якщо він довгий
+      const inner = next.querySelector('.slide-inner');
+      if (inner) inner.scrollTop = 0;
+      
+      updateNav();
+      animating = false;
+    }, 400); // Час на затухання попереднього слайду
+  }
 
-        const pct = total > 1 ? (current / (total - 1)) * 100 : 100;
-        progressBar.style.width = pct + '%';
+  function changeSlide(dir) {
+    goTo(current + dir);
+  }
 
-        const pad = n => String(n).padStart(2, '0');
-        slideCounter.textContent = `${pad(current + 1)} / ${pad(total)}`;
+  // Керування клавіатурою
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
 
-        prevBtn.disabled = current === 0;
-        nextBtn.disabled = current === total - 1;
-    }
+  // Керування свайпами для телефонів
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { 
+    touchStartX = e.touches[0].clientX; 
+  }, { passive: true });
+  
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) changeSlide(dx < 0 ? 1 : -1);
+  });
 
-    function goTo(index) {
-        if (index >= 0 && index < total) {
-            current = index;
-            updateUI();
-        }
-    }
-
-    function changeSlide(dir) { goTo(current + dir); }
-
-    document.addEventListener('keydown', e => {
-        if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
-        else if (e.key === 'ArrowLeft') changeSlide(-1);
-    });
-
-    let tx = 0;
-    document.addEventListener('touchstart', e => tx = e.changedTouches[0].screenX, { passive: true });
-    document.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].screenX - tx;
-        if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
-    }, { passive: true });
-
-    updateUI();
+  updateNav();
 </script>
 </body>
 </html>
