@@ -58,19 +58,19 @@
 
         .slide {
             position: absolute;
-            width: 80%;
-            max-width: 1000px;
+            width: 85%;
+            max-width: 1100px;
             opacity: 0;
             transform: translateY(50px) scale(0.95);
             transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
             pointer-events: none;
             
-            /* Ефект преміального скла (Glassmorphism) */
+            /* Ефект преміального скла */
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 60px;
+            padding: 50px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.5);
         }
 
@@ -81,6 +81,39 @@
             z-index: 10;
         }
 
+        /* Внутрішній макет слайду (текст + фото) */
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .text-side {
+            flex: 1;
+        }
+
+        .img-side {
+            flex: 0 0 400px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .slide-img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.5s ease;
+        }
+
+        .slide-img:hover {
+            transform: scale(1.05) rotate(2deg);
+            border-color: var(--accent);
+            box-shadow: 0 20px 45px rgba(255, 215, 0, 0.2);
+        }
+
         /* Типографіка */
         h1, h2 {
             font-family: 'Playfair Display', serif;
@@ -89,12 +122,12 @@
             text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
         }
 
-        h1 { font-size: 4rem; line-height: 1.1; }
-        h2 { font-size: 2.8rem; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 10px;}
+        h1 { font-size: 3.5rem; line-height: 1.1; }
+        h2 { font-size: 2.5rem; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 10px;}
         
         p, li {
-            font-size: 1.3rem;
-            line-height: 1.8;
+            font-size: 1.2rem;
+            line-height: 1.6;
             margin-bottom: 15px;
             font-weight: 300;
         }
@@ -102,21 +135,23 @@
         ul { margin-left: 30px; }
 
         .author-tag {
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 1.1rem;
             color: #a0a0ff;
-            cursor: pointer; /* Для пасхалки */
+            cursor: pointer;
             display: inline-block;
             transition: color 0.3s;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
         }
-        .author-tag:hover { color: white; }
+        .author-tag:hover { color: white; background: rgba(0,0,0,0.5); }
 
         .quote {
             font-style: italic;
             font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            text-align: center;
-            margin: 30px 0;
+            font-size: 1.4rem;
+            margin: 20px 0;
             color: #e0e0e0;
             border-left: 4px solid var(--accent);
             padding-left: 20px;
@@ -125,7 +160,7 @@
         /* Управління */
         .controls {
             position: fixed;
-            bottom: 40px;
+            bottom: 30px;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -137,7 +172,7 @@
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             padding: 10px 25px;
             border-radius: 30px;
             cursor: pointer;
@@ -184,61 +219,109 @@
         
         <!-- Слайд 1 -->
         <div class="slide active">
-            <h1>Роберт Шеклі</h1>
-            <p style="font-size: 1.5rem; color: #ccc;">Архітектор парадоксів та майстер іронічної фантастики</p>
-            <div class="author-tag" id="secret-trigger">
-                Виконала: <strong>Мамчур Аліна</strong><br>
-                учениця 6-Б класу
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h1>Роберт Шеклі</h1>
+                    <p style="font-size: 1.4rem; color: #ccc;">Архітектор парадоксів та майстер іронічної фантастики</p>
+                    <div class="author-tag" id="secret-trigger">
+                        Виконала: <strong>Мамчур Аліна</strong><br>
+                        учениця 6-Б класу
+                    </div>
+                </div>
+                <div class="img-side">
+                    <!-- Космічна естетика -->
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" class="slide-img" alt="Всесвіт">
+                </div>
             </div>
         </div>
 
         <!-- Слайд 2 -->
         <div class="slide">
-            <h2>Хто такий Роберт Шеклі?</h2>
-            <p>Видатний американський письменник, якого літературознавці називають <strong>«О. Генрі наукової фантастики»</strong>.</p>
-            <p>Він не просто писав про космічні кораблі чи прибульців. Його зброєю була <em>іронія</em>, а головною темою — психологія звичайної людини в незвичайних обставинах.</p>
-            <div class="quote">
-                "Найнебезпечніша зброя у Всесвіті — це людський розум."
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h2>Хто такий Роберт Шеклі?</h2>
+                    <p>Видатний американський письменник, якого літературознавці називають <strong>«О. Генрі наукової фантастики»</strong>.</p>
+                    <p>Він не просто писав про космічні кораблі чи прибульців. Його зброєю була <em>іронія</em>, а головною темою — психологія звичайної людини в незвичайних обставинах.</p>
+                    <div class="quote">
+                        "Найнебезпечніша зброя у Всесвіті — це людський розум."
+                    </div>
+                </div>
+                <div class="img-side">
+                    <!-- Портрет Роберта Шеклі -->
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Robert_Sheckley_1999.jpg/600px-Robert_Sheckley_1999.jpg" class="slide-img" alt="Роберт Шеклі">
+                </div>
             </div>
         </div>
 
         <!-- Слайд 3 -->
         <div class="slide">
-            <h2>Життєвий шлях</h2>
-            <ul>
-                <li><strong>Народження:</strong> 16 липня 1928 року в Нью-Йорку (Бруклін).</li>
-                <li><strong>Пошук себе:</strong> До того як стати відомим, працював розсильним, барменом, садівником та служив в армії США в Кореї.</li>
-                <li><strong>Сходження зірки:</strong> У 1950-х роках почав друкуватися в журналах. Його геніальні короткі оповідання одразу зробили його зіркою світового масштабу.</li>
-            </ul>
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h2>Життєвий шлях</h2>
+                    <ul>
+                        <li><strong>Народження:</strong> 16 липня 1928 року в Нью-Йорку (Бруклін).</li>
+                        <li><strong>Пошук себе:</strong> До того як стати відомим, працював розсильним, барменом, садівником та служив в армії США в Кореї.</li>
+                        <li><strong>Сходження зірки:</strong> У 1950-х роках почав друкуватися в журналах. Його геніальні короткі оповідання одразу зробили його зіркою світового масштабу.</li>
+                    </ul>
+                </div>
+                <div class="img-side">
+                    <!-- Друкарська машинка як символ початку кар'єри -->
+                    <img src="https://images.unsplash.com/photo-1505682634904-d7c8d95cdc50?auto=format&fit=crop&w=600&q=80" class="slide-img" alt="Письменництво">
+                </div>
+            </div>
         </div>
 
         <!-- Слайд 4 -->
         <div class="slide">
-            <h2>Стиль життя: Свобода і Мандри</h2>
-            <p>Шеклі не був кабінетним письменником. Він мав душу справжнього мандрівника та богеми:</p>
-            <ul>
-                <li>Жив у Гринвіч-Віллідж (район митців у Нью-Йорку).</li>
-                <li>Мешкав на іспанському острові Ібіца, в Лондоні та Парижі.</li>
-                <li>Завжди шукав нових вражень, які згодом перетворював на сюжети своїх неперевершених історій (наприклад, "Запах думки").</li>
-            </ul>
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h2>Стиль життя: Свобода і Мандри</h2>
+                    <p>Шеклі не був кабінетним письменником. Він мав душу справжнього мандрівника та богеми:</p>
+                    <ul>
+                        <li>Жив у Гринвіч-Віллідж (район митців у Нью-Йорку).</li>
+                        <li>Мешкав на іспанському острові Ібіца, в Лондоні та Парижі.</li>
+                        <li>Завжди шукав нових вражень, які згодом перетворював на сюжети своїх неперевершених історій (наприклад, "Запах думки").</li>
+                    </ul>
+                </div>
+                <div class="img-side">
+                    <!-- Європейські подорожі / Ібіца -->
+                    <img src="https://images.unsplash.com/photo-1533682805518-48d1f5a8bb38?auto=format&fit=crop&w=600&q=80" class="slide-img" alt="Подорожі">
+                </div>
+            </div>
         </div>
 
         <!-- Слайд 5 -->
         <div class="slide">
-            <h2>Унікальний творчий почерк</h2>
-            <p>Чому твори Шеклі вивчають у найкращих школах світу?</p>
-            <ul>
-                <li><strong>Гуманізм:</strong> У центрі уваги завжди залишається людина та її моральні якості.</li>
-                <li><strong>Абсурд і Гумор:</strong> Він доводив звичні ситуації до абсурду, щоб показати вади суспільства.</li>
-                <li><strong>Парадоксальний фінал:</strong> Жодне його оповідання не закінчується так, як очікує читач.</li>
-            </ul>
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h2>Унікальний творчий почерк</h2>
+                    <p>Чому твори Шеклі вивчають у найкращих школах світу?</p>
+                    <ul>
+                        <li><strong>Гуманізм:</strong> У центрі уваги завжди залишається людина та її моральні якості.</li>
+                        <li><strong>Абсурд і Гумор:</strong> Він доводив звичні ситуації до абсурду, щоб показати вади суспільства.</li>
+                        <li><strong>Парадоксальний фінал:</strong> Жодне його оповідання не закінчується так, як очікує читач.</li>
+                    </ul>
+                </div>
+                <div class="img-side">
+                    <!-- Абстракція / Парадокс -->
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" class="slide-img" alt="Парадокс">
+                </div>
+            </div>
         </div>
 
         <!-- Слайд 6 -->
         <div class="slide">
-            <h2>Висновок</h2>
-            <p>Роберт Шеклі довів, що фантастика — це не лише розвага, а глибока філософія. Його твори вчать нас мислити критично, не боятися невідомого і дивитися в майбутнє з легкою усмішкою.</p>
-            <h2 style="text-align: center; border: none; margin-top: 40px;">Дякую за увагу!</h2>
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <h2>Висновок</h2>
+                    <p>Роберт Шеклі довів, що фантастика — це не лише розвага, а глибока філософія. Його твори вчать нас мислити критично, не боятися невідомого і дивитися в майбутнє з легкою усмішкою.</p>
+                    <h2 style="border: none; margin-top: 30px; color: white;">Дякую за увагу!</h2>
+                </div>
+                <div class="img-side">
+                    <!-- Майбутнє / Зорі -->
+                    <img src="https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&w=600&q=80" class="slide-img" alt="Майбутнє">
+                </div>
+            </div>
         </div>
 
     </div>
